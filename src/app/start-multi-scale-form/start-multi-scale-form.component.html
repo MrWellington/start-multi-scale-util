@@ -1,1 +1,20 @@
-<h1>form</h1>
+<div class="form-container">
+    <form #form="ngForm" (ngSubmit)="onSubmit()">
+        <div class="form-body">
+            <div class="left-form-column">
+                <label for="hello">Hello</label>
+                <input id="hello" name="hello" [(ngModel)]="formModel.hello"
+                      required #helloField="ngModel" 
+                      [class.field-error]="form.submitted && helloField.invalid">
+            </div>
+            <div class="right-form-column">
+                <label for="world">World</label>
+                <input id="world" name="world" [(ngModel)]="formModel.world"
+                      required #worldField="ngModel" 
+                      [class.field-error]="form.submitted && worldField.invalid">
+            </div>
+        </div>
+        <button>Submit</button>
+    </form>
+    <textarea></textarea>
+</div>
