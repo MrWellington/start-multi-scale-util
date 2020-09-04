@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms'
 
 import { AppComponent } from './app.component';
 import { StartMultiScaleFormComponent } from './start-multi-scale-form/start-multi-scale-form.component';
@@ -12,7 +13,8 @@ import { PythonConsoleComponent } from './python-console/python-console.componen
     PythonConsoleComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
