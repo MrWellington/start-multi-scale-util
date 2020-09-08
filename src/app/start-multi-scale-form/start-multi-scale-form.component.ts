@@ -12,9 +12,28 @@ export class StartMultiScaleFormComponent implements OnInit {
 
     constructor(private pythonService: PythonService) {}
 
+    max_dim: number[] = [512, 1024, 2048, 4096, 7096];
+
     defaultModel: StartMultiScaleModel = {
-        hello: "hello",
-        world: "world"
+        epochs: [600, 250, 250, 150, 150],
+        contentWeight: [10, 10, 0, 0, 0],
+        useReducedLayerSet: [3, 3, 0, 0, 0],
+        style: [],
+        styleWeight: [],
+        runUntil: 2048,
+        startFromDim: 0,
+        previousDim: 0,
+        imgRatio: 0.8,
+        gpu: false, 
+        styleDir: "../basePatterns",
+        content: "",
+        contentDir: "",
+        key: "",
+        learningRate: 0.000015,
+        endLearningRate: 0.000005,
+        autoContentPalette: false,
+        printIters: 500,
+        makeMirror: 0
     };
 
     formModel: StartMultiScaleModel = { ...this.defaultModel };
@@ -27,5 +46,9 @@ export class StartMultiScaleFormComponent implements OnInit {
 
     onSubmit(): void {
         this.pythonService.submitForm(this.formModel);
+    }
+
+    trackByIndex(index: number, obj: any): any {
+        return index;
     }
 }

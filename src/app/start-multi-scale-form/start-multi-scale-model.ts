@@ -1,4 +1,21 @@
 export interface StartMultiScaleModel {
-    hello: string,
-    world: string
+    epochs: number[],
+    contentWeight: number[],
+    useReducedLayerSet: number[],
+    style: string[],
+    styleWeight: number[],
+    runUntil: number,
+    startFromDim: number,
+    previousDim: number,
+    imgRatio: number,
+    gpu: boolean,
+    styleDir: string,
+    content: string,
+    contentDir: string,
+    key: string,
+    learningRate: number,
+    endLearningRate: number,
+    autoContentPalette: boolean,
+    printIters: number,
+    makeMirror: number
 }

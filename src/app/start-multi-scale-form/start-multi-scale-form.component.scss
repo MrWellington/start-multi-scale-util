@@ -1,6 +1,7 @@
-.form-container {
+.start-multi-scale-form-container {
     display: flex;
     flex-direction: column;
+    height: 100%;
 
     > form {
         display: flex;
@@ -10,11 +11,42 @@
         .form-body {
             display: flex;
             flex-flow: row nowrap;
-            justify-content: space-around;
+            justify-content: center;
+
+            .form-column {
+                display: flex;
+                flex-direction: column;
+
+                .form-container {
+                    display: flex;
+                    flex-direction: column;
+                    padding: 4px 24px;
+
+                    .form-input {
+                        display: flex;
+                        flex-direction: row;
+                    }
+                }
+            }
         }
 
         button {
             width: 100px;
         }
     }
+
+    .python-console-container {
+        flex-grow: 1;
+        height: 100%;
+
+        textarea {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+    }
+}
+
+kendo-numerictextbox {
+    width: 75px;
 }

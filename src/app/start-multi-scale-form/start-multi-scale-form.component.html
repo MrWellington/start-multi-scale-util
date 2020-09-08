@@ -1,20 +1,186 @@
-<div class="form-container">
+<div class="start-multi-scale-form-container">
     <form #form="ngForm" (ngSubmit)="onSubmit()">
         <div class="form-body">
-            <div class="left-form-column">
-                <label for="hello">Hello</label>
-                <input id="hello" name="hello" [(ngModel)]="formModel.hello"
-                      required #helloField="ngModel" 
-                      [class.field-error]="form.submitted && helloField.invalid">
+            <div class="form-column">
+                <div class="form-container">
+                    <kendo-label text="Epochs"></kendo-label>
+                    <div class="form-input">
+                        <kendo-numerictextbox *ngFor="let epoch of formModel.epochs; let index = index; trackBy:trackByIndex"
+                            name="epoch{{index}}" 
+                            [(ngModel)]="formModel.epochs[index]" 
+                            [format]="'n0'" 
+                            [spinners]="false">
+                        </kendo-numerictextbox>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <kendo-label text="Content weight"></kendo-label>
+                    <div class="form-input">
+                        <kendo-numerictextbox *ngFor="let weight of formModel.contentWeight; let index = index; trackBy:trackByIndex"
+                            name="weight{{index}}" 
+                            [(ngModel)]="formModel.contentWeight[index]" 
+                            [format]="'n0'" 
+                            [spinners]="false">
+                        </kendo-numerictextbox>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <kendo-label text="Use reduced layout set"></kendo-label>
+                    <div class="form-input">
+                        <kendo-numerictextbox *ngFor="let layerSet of formModel.useReducedLayerSet; let index = index; trackBy:trackByIndex"
+                            name="layer-set{{index}}" 
+                            [(ngModel)]="formModel.useReducedLayerSet[index]" 
+                            [format]="'n0'" 
+                            [spinners]="false">
+                        </kendo-numerictextbox>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <kendo-label text="Run until"></kendo-label>
+                    <div class="form-input">
+                        <kendo-slider #runUntilSlider
+                            name="run-until"
+                            [min]="0"
+                            [max]="max_dim.length - 1">
+                        </kendo-slider>
+                        <span>{{max_dim[runUntilSlider.value]}}</span>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <kendo-label text="Start from dim"></kendo-label>
+                    <div class="form-input">
+                        <kendo-slider #startFromSlider
+                            name="run-until"
+                            [min]="0"
+                            [max]="max_dim.length - 1">
+                        </kendo-slider>
+                        <span>{{max_dim[startFromSlider.value]}}</span>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <kendo-label text="Previous dim"></kendo-label>
+                    <div class="form-input">
+                        <kendo-slider #previousSlider
+                            name="run-until"
+                            [min]="0"
+                            [max]="max_dim.length - 1">
+                        </kendo-slider>
+                        <span>{{max_dim[previousSlider.value]}}</span>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <kendo-label text="Image ratio"></kendo-label>
+                    <div class="form-input">
+                        <kendo-numerictextbox
+                            name="image-ratio" 
+                            [(ngModel)]="formModel.imgRatio" 
+                            [format]="'n1'" 
+                            [spinners]="false">
+                        </kendo-numerictextbox>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <kendo-label text="GPU"></kendo-label>
+                    <div class="form-input">
+                        <kendo-switch 
+                            name="gpu"
+                            [(ngModel)]="formModel.gpu">
+                        </kendo-switch>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <kendo-label text="Learning rate"></kendo-label>
+                    <div class="form-input">
+                        <kendo-numerictextbox
+                            name="learning-rate" 
+                            [(ngModel)]="formModel.learningRate" 
+                            [format]="'n6'" 
+                            [spinners]="false">
+                        </kendo-numerictextbox>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <kendo-label text="End learning rate"></kendo-label>
+                    <div class="form-input">
+                        <kendo-numerictextbox
+                            name="end-learning-rate" 
+                            [(ngModel)]="formModel.endLearningRate" 
+                            [format]="'n6'" 
+                            [spinners]="false">
+                        </kendo-numerictextbox>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <kendo-label text="Auto content palette"></kendo-label>
+                    <div class="form-input">
+                        <kendo-switch 
+                            name="auto-content-palette"
+                            [(ngModel)]="formModel.autoContentPalette">
+                        </kendo-switch>
+                    </div>
+                </div>
             </div>
-            <div class="right-form-column">
-                <label for="world">World</label>
-                <input id="world" name="world" [(ngModel)]="formModel.world"
-                      required #worldField="ngModel" 
-                      [class.field-error]="form.submitted && worldField.invalid">
+            <div class="form-column">
+                <div class="form-container">
+                    <kendo-label text="Style"></kendo-label>
+                    <div class="form-input">
+                        <kendo-fileselect></kendo-fileselect>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <kendo-label text="Style directory"></kendo-label>
+                    <div class="form-input">
+                        <kendo-fileselect></kendo-fileselect>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <kendo-label text="Content"></kendo-label>
+                    <div class="form-input">
+                        <kendo-fileselect></kendo-fileselect>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <kendo-label text="Content directory"></kendo-label>
+                    <div class="form-input">
+                        <kendo-fileselect></kendo-fileselect>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <kendo-label text="Key"></kendo-label>
+                    <div class="form-input">
+                        <input kendoTextBox
+                            name="key"
+                            [(ngModel)]="formModel.key" />
+                    </div>
+                </div>
+                <div class="form-container">
+                    <kendo-label text="Print iterations"></kendo-label>
+                    <div class="form-input">
+                        <kendo-numerictextbox
+                        name="print-iterations" 
+                        [(ngModel)]="formModel.printIters" 
+                        [format]="'n0'" 
+                        [spinners]="false">
+                    </kendo-numerictextbox>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <kendo-label text="Make mirror"></kendo-label>
+                    <div class="form-input">
+                        <kendo-slider #makeMirrorSlider
+                            name="make-mirror"
+                            [(ngModel)]="formModel.makeMirror"
+                            [min]="0"
+                            [max]="4">
+                        </kendo-slider>
+                        <span>{{makeMirrorSlider.value}}</span>
+                    </div>
+                </div>
             </div>
         </div>
-        <button>Submit</button>
+        <button kendoButton [primary]="true">Submit</button>
     </form>
-    <textarea></textarea>
+    <div class="python-console-container">
+        <textarea kendoTextArea></textarea>
+    </div>
 </div>
