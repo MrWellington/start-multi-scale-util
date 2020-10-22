@@ -1,9 +1,9 @@
+import { StartMultiScaleStyle } from './start-multi-scale-style'
+
 export interface StartMultiScaleModel {
     epochs: number[],
     contentWeight: number[],
     useReducedLayerSet: number[],
-    style: string[],
-    styleWeight: number[],
     runUntil: number,
     startFromDim: number,
     previousDim: number,
@@ -13,9 +13,5 @@ export interface StartMultiScaleModel {
     content: string,
     contentDir: string,
     key: string,
-    learningRate: number,
-    endLearningRate: number,
-    autoContentPalette: boolean,
-    printIters: number,
-    makeMirror: number
+    styles: Array<StartMultiScaleStyle>
 }

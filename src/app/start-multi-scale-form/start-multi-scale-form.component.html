@@ -1,7 +1,7 @@
 <div class="start-multi-scale-form-container">
-    <form #form="ngForm" (ngSubmit)="onSubmit()">
-        <div class="form-body">
-            <div class="form-column">
+    <div class="form-body">
+        <div class="form-two-column">
+            <div class="form-column-half">
                 <div class="form-container">
                     <kendo-label text="Epochs"></kendo-label>
                     <div class="form-input">
@@ -9,7 +9,9 @@
                             name="epoch{{index}}" 
                             [(ngModel)]="formModel.epochs[index]" 
                             [format]="'n0'" 
-                            [spinners]="false">
+                            [spinners]="false"
+                            [min]="0"
+                            [max]="2000">
                         </kendo-numerictextbox>
                     </div>
                 </div>
@@ -20,7 +22,9 @@
                             name="weight{{index}}" 
                             [(ngModel)]="formModel.contentWeight[index]" 
                             [format]="'n0'" 
-                            [spinners]="false">
+                            [spinners]="false"
+                            [min]="0"
+                            [max]="10000">
                         </kendo-numerictextbox>
                     </div>
                 </div>
@@ -31,10 +35,35 @@
                             name="layer-set{{index}}" 
                             [(ngModel)]="formModel.useReducedLayerSet[index]" 
                             [format]="'n0'" 
-                            [spinners]="false">
+                            [spinners]="false"
+                            [min]="0"
+                            [max]="7">
                         </kendo-numerictextbox>
                     </div>
                 </div>
+                <div class="form-container">
+                    <kendo-label text="Image ratio"></kendo-label>
+                    <div class="form-input">
+                        <kendo-numerictextbox
+                            name="image-ratio" 
+                            [(ngModel)]="formModel.imgRatio" 
+                            [format]="'n1'" 
+                            [spinners]="false"
+                            [min]="0"
+                            [max]="1">
+                        </kendo-numerictextbox>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <kendo-label text="Key"></kendo-label>
+                    <div class="form-input">
+                        <input kendoTextBox
+                            name="key"
+                            [(ngModel)]="formModel.key" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-column-half">
                 <div class="form-container">
                     <kendo-label text="Run until"></kendo-label>
                     <div class="form-input">
@@ -47,6 +76,7 @@
                     </div>
                 </div>
                 <div class="form-container">
+                    <!--LEQ run_until-->
                     <kendo-label text="Start from dim"></kendo-label>
                     <div class="form-input">
                         <kendo-slider #startFromSlider
@@ -58,6 +88,7 @@
                     </div>
                 </div>
                 <div class="form-container">
+                    <!--LEQ run_until; change to small step of 1-->
                     <kendo-label text="Previous dim"></kendo-label>
                     <div class="form-input">
                         <kendo-slider #previousSlider
@@ -69,14 +100,10 @@
                     </div>
                 </div>
                 <div class="form-container">
-                    <kendo-label text="Image ratio"></kendo-label>
+                    <!--Just allow one file-->
+                    <kendo-label text="Content"></kendo-label>
                     <div class="form-input">
-                        <kendo-numerictextbox
-                            name="image-ratio" 
-                            [(ngModel)]="formModel.imgRatio" 
-                            [format]="'n1'" 
-                            [spinners]="false">
-                        </kendo-numerictextbox>
+                        <kendo-fileselect></kendo-fileselect>
                     </div>
                 </div>
                 <div class="form-container">
@@ -88,98 +115,90 @@
                         </kendo-switch>
                     </div>
                 </div>
-                <div class="form-container">
-                    <kendo-label text="Learning rate"></kendo-label>
-                    <div class="form-input">
-                        <kendo-numerictextbox
-                            name="learning-rate" 
-                            [(ngModel)]="formModel.learningRate" 
-                            [format]="'n6'" 
-                            [spinners]="false">
-                        </kendo-numerictextbox>
-                    </div>
-                </div>
-                <div class="form-container">
-                    <kendo-label text="End learning rate"></kendo-label>
-                    <div class="form-input">
-                        <kendo-numerictextbox
-                            name="end-learning-rate" 
-                            [(ngModel)]="formModel.endLearningRate" 
-                            [format]="'n6'" 
-                            [spinners]="false">
-                        </kendo-numerictextbox>
-                    </div>
-                </div>
-                <div class="form-container">
-                    <kendo-label text="Auto content palette"></kendo-label>
-                    <div class="form-input">
-                        <kendo-switch 
-                            name="auto-content-palette"
-                            [(ngModel)]="formModel.autoContentPalette">
-                        </kendo-switch>
-                    </div>
-                </div>
-            </div>
-            <div class="form-column">
-                <div class="form-container">
-                    <kendo-label text="Style"></kendo-label>
-                    <div class="form-input">
-                        <kendo-fileselect></kendo-fileselect>
-                    </div>
-                </div>
-                <div class="form-container">
-                    <kendo-label text="Style directory"></kendo-label>
-                    <div class="form-input">
-                        <kendo-fileselect></kendo-fileselect>
-                    </div>
-                </div>
-                <div class="form-container">
-                    <kendo-label text="Content"></kendo-label>
-                    <div class="form-input">
-                        <kendo-fileselect></kendo-fileselect>
-                    </div>
-                </div>
-                <div class="form-container">
-                    <kendo-label text="Content directory"></kendo-label>
-                    <div class="form-input">
-                        <kendo-fileselect></kendo-fileselect>
-                    </div>
-                </div>
-                <div class="form-container">
-                    <kendo-label text="Key"></kendo-label>
-                    <div class="form-input">
-                        <input kendoTextBox
-                            name="key"
-                            [(ngModel)]="formModel.key" />
-                    </div>
-                </div>
-                <div class="form-container">
-                    <kendo-label text="Print iterations"></kendo-label>
-                    <div class="form-input">
-                        <kendo-numerictextbox
-                        name="print-iterations" 
-                        [(ngModel)]="formModel.printIters" 
-                        [format]="'n0'" 
-                        [spinners]="false">
-                    </kendo-numerictextbox>
-                    </div>
-                </div>
-                <div class="form-container">
-                    <kendo-label text="Make mirror"></kendo-label>
-                    <div class="form-input">
-                        <kendo-slider #makeMirrorSlider
-                            name="make-mirror"
-                            [(ngModel)]="formModel.makeMirror"
-                            [min]="0"
-                            [max]="4">
-                        </kendo-slider>
-                        <span>{{makeMirrorSlider.value}}</span>
-                    </div>
-                </div>
             </div>
         </div>
-        <button kendoButton [primary]="true">Submit</button>
-    </form>
+        <div class="form-single-column">
+            <div class="form-container">
+                <!--One or more...populate grid with 'style' numeric (default 100, 0-10000, 'n1')-->
+                <kendo-label text="Styles"></kendo-label>
+                <div class="form-input">
+                    <kendo-fileselect class="styles" [(ngModel)]="formModel.styles" (valueChange)="onStyleChange($event)" name="styles"></kendo-fileselect>
+                </div>
+                <table *ngIf="formModel.styles.length > 0">
+                    <thead>
+                        <tr>
+                            <th style="width: 100%;">Name</th>
+                            <th>Weight</th>
+                            <th>Learning Rate</th>
+                            <th>End Learning Rate</th>
+                            <th>Auto Content Palette</th>
+                            <th>Print Iters</th>
+                            <th>Make Mirror</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor='let file of formModel.styles'>
+                            <tr class="style-row">
+                                <td style="width: 100%;">
+                                    <kendo-label>{{file.name}}</kendo-label>
+                                </td>
+                                <td>
+                                    <input kendoTextBox [(ngModel)]="file.weight">
+                                </td>
+                                <td>
+                                    <kendo-numerictextbox
+                                        name="learning-rate" 
+                                        [(ngModel)]="file.learningRate" 
+                                        [format]="'n6'" 
+                                        [spinners]="false"
+                                        [min]="0">
+                                    </kendo-numerictextbox>
+                                </td>
+                                <td>
+                                    <kendo-numerictextbox
+                                        name="end-learning-rate" 
+                                        [(ngModel)]="file.endLearningRate" 
+                                        [format]="'n6'" 
+                                        [spinners]="false"
+                                        [min]="0">
+                                    </kendo-numerictextbox>
+                                </td>
+                                <td>
+                                    <kendo-switch 
+                                        name="auto-content-palette"
+                                        [(ngModel)]="file.autoContentPalette">
+                                    </kendo-switch>
+                                </td>
+                                <td>
+                                    <kendo-numerictextbox
+                                        name="print-iterations" 
+                                        [(ngModel)]="file.printIters" 
+                                        [format]="'n0'" 
+                                        [spinners]="false"
+                                        [min]="1">
+                                    </kendo-numerictextbox>
+                                </td>
+                                <td>
+                                    <kendo-slider #makeMirrorSlider
+                                        name="make-mirror"
+                                        [(ngModel)]="file.makeMirror"
+                                        [min]="0"
+                                        [max]="4">
+                                    </kendo-slider>
+                                    <span>{{makeMirrorSlider.value}}</span>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="form-single-column">
+            <div class="form-container">
+                <button kendoButton [primary]="true" (click)="onSubmit()">Submit</button>
+            </div>
+        </div>
+    </div>
     <div class="python-console-container">
         <textarea kendoTextArea></textarea>
     </div>

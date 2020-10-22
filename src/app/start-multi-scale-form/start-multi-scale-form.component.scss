@@ -2,39 +2,54 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    width: 100%;
+    margin: auto;
 
-    > form {
+    .form-body {
         display: flex;
-        flex-direction: column;
-        width: 100%;
+        flex-flow: column nowrap;
+        justify-content: center;
 
-        .form-body {
+        .form-two-column {
             display: flex;
             flex-flow: row nowrap;
-            justify-content: center;
 
-            .form-column {
+            .form-column-half {
                 display: flex;
                 flex-direction: column;
-
-                .form-container {
-                    display: flex;
-                    flex-direction: column;
-                    padding: 4px 24px;
-
-                    .form-input {
-                        display: flex;
-                        flex-direction: row;
-                    }
-                }
+                flex-grow: 1;
             }
         }
 
-        button {
-            width: 100px;
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            padding: 4px 24px;
+
+            .form-input {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+
+                > kendo-slider {
+                    flex-grow: 1;
+                }
+            }
+
+            kendo-fileselect {
+                width: 100%;
+            }
         }
     }
 
+    button {
+        width: 100px;
+    }
+
+    th {
+        text-align: left;
+    }
+    
     .python-console-container {
         flex-grow: 1;
         height: 100%;
