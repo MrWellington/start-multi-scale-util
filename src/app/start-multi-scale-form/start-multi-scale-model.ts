@@ -9,9 +9,7 @@ export interface StartMultiScaleModel {
     previousDim: number,
     imgRatio: number,
     gpu: boolean,
-    styleDir: string,
     content: string,
-    contentDir: string,
     key: string,
     styles: Array<StartMultiScaleStyle>
 }

@@ -13,21 +13,13 @@ header {
     flex-direction: row;
     align-items: stretch;
     height: 100%;
+    overflow: hidden;
 
     start-multi-scale-form {
         height: 100%;
         width: 100%;
+        overflow: hidden;
+        display: flex;
     }
 }
 
-.template-panel {
-    display: flex;
-    flex-direction: column;
-    height: 100%; 
-    width: 255px; 
-    border-right: 1px solid grey;
-
-    > * {
-        margin: 16px;
-    }
-}

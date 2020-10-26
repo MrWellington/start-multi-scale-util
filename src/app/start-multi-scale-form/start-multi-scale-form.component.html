@@ -1,3 +1,9 @@
+<div class="template-panel">
+  <button kendoButton class="template-panel-load-button" (click)="browseTemplates($event)">Load Template</button>
+  <input id="templateInput" class="template-panel-load-input" type="file" (change)="loadTemplate($event.target.files)">
+  <button kendoButton (click)="saveTemplate()">Save Template</button>
+  <div>Recents</div>
+</div>
 <div class="start-multi-scale-form-container">
     <div class="form-body">
         <div class="form-two-column">
@@ -6,9 +12,9 @@
                     <kendo-label text="Epochs"></kendo-label>
                     <div class="form-input">
                         <kendo-numerictextbox *ngFor="let epoch of formModel.epochs; let index = index; trackBy:trackByIndex"
-                            name="epoch{{index}}" 
-                            [(ngModel)]="formModel.epochs[index]" 
-                            [format]="'n0'" 
+                            name="epoch{{index}}"
+                            [(ngModel)]="formModel.epochs[index]"
+                            [format]="'n0'"
                             [spinners]="false"
                             [min]="0"
                             [max]="2000">
@@ -19,9 +25,9 @@
                     <kendo-label text="Content weight"></kendo-label>
                     <div class="form-input">
                         <kendo-numerictextbox *ngFor="let weight of formModel.contentWeight; let index = index; trackBy:trackByIndex"
-                            name="weight{{index}}" 
-                            [(ngModel)]="formModel.contentWeight[index]" 
-                            [format]="'n0'" 
+                            name="weight{{index}}"
+                            [(ngModel)]="formModel.contentWeight[index]"
+                            [format]="'n0'"
                             [spinners]="false"
                             [min]="0"
                             [max]="10000">
@@ -32,9 +38,9 @@
                     <kendo-label text="Use reduced layout set"></kendo-label>
                     <div class="form-input">
                         <kendo-numerictextbox *ngFor="let layerSet of formModel.useReducedLayerSet; let index = index; trackBy:trackByIndex"
-                            name="layer-set{{index}}" 
-                            [(ngModel)]="formModel.useReducedLayerSet[index]" 
-                            [format]="'n0'" 
+                            name="layer-set{{index}}"
+                            [(ngModel)]="formModel.useReducedLayerSet[index]"
+                            [format]="'n0'"
                             [spinners]="false"
                             [min]="0"
                             [max]="7">
@@ -45,9 +51,9 @@
                     <kendo-label text="Image ratio"></kendo-label>
                     <div class="form-input">
                         <kendo-numerictextbox
-                            name="image-ratio" 
-                            [(ngModel)]="formModel.imgRatio" 
-                            [format]="'n1'" 
+                            name="image-ratio"
+                            [(ngModel)]="formModel.imgRatio"
+                            [format]="'n1'"
                             [spinners]="false"
                             [min]="0"
                             [max]="1">
@@ -103,13 +109,13 @@
                     <!--Just allow one file-->
                     <kendo-label text="Content"></kendo-label>
                     <div class="form-input">
-                        <kendo-fileselect></kendo-fileselect>
+                        <kendo-fileselect [multiple]="false" (valueChange)="onContentChange($event)"></kendo-fileselect>
                     </div>
                 </div>
                 <div class="form-container">
                     <kendo-label text="GPU"></kendo-label>
                     <div class="form-input">
-                        <kendo-switch 
+                        <kendo-switch
                             name="gpu"
                             [(ngModel)]="formModel.gpu">
                         </kendo-switch>
@@ -124,56 +130,56 @@
                 <div class="form-input">
                     <kendo-fileselect class="styles" [(ngModel)]="formModel.styles" (valueChange)="onStyleChange($event)" name="styles"></kendo-fileselect>
                 </div>
-                <table *ngIf="formModel.styles.length > 0">
+                <table class="style-table" *ngIf="formModel.styles.length > 0">
                     <thead>
                         <tr>
-                            <th style="width: 100%;">Name</th>
-                            <th>Weight</th>
-                            <th>Learning Rate</th>
-                            <th>End Learning Rate</th>
-                            <th>Auto Content Palette</th>
-                            <th>Print Iters</th>
-                            <th>Make Mirror</th>
+                            <th class="style-name-col">Name</th>
+                            <th class="style-weight-col">Weight</th>
+                            <th class="style-lr-col">Learning Rate</th>
+                            <th class="style-elr-col">End Learning Rate</th>
+                            <th class="style-acp-col">Auto Content Palette</th>
+                            <th class="style-pi-col">Print Iters</th>
+                            <th class="style-mm-col">Make Mirror</th>
                         </tr>
                     </thead>
                     <tbody>
                         <ng-container *ngFor='let file of formModel.styles'>
                             <tr class="style-row">
-                                <td style="width: 100%;">
-                                    <kendo-label>{{file.name}}</kendo-label>
+                                <td>
+                                    <kendo-label>{{file.fileName}}</kendo-label>
                                 </td>
                                 <td>
                                     <input kendoTextBox [(ngModel)]="file.weight">
                                 </td>
                                 <td>
                                     <kendo-numerictextbox
-                                        name="learning-rate" 
-                                        [(ngModel)]="file.learningRate" 
-                                        [format]="'n6'" 
+                                        name="learning-rate"
+                                        [(ngModel)]="file.learningRate"
+                                        [format]="'n6'"
                                         [spinners]="false"
                                         [min]="0">
                                     </kendo-numerictextbox>
                                 </td>
                                 <td>
                                     <kendo-numerictextbox
-                                        name="end-learning-rate" 
-                                        [(ngModel)]="file.endLearningRate" 
-                                        [format]="'n6'" 
+                                        name="end-learning-rate"
+                                        [(ngModel)]="file.endLearningRate"
+                                        [format]="'n6'"
                                         [spinners]="false"
                                         [min]="0">
                                     </kendo-numerictextbox>
                                 </td>
                                 <td>
-                                    <kendo-switch 
+                                    <kendo-switch
                                         name="auto-content-palette"
                                         [(ngModel)]="file.autoContentPalette">
                                     </kendo-switch>
                                 </td>
                                 <td>
                                     <kendo-numerictextbox
-                                        name="print-iterations" 
-                                        [(ngModel)]="file.printIters" 
-                                        [format]="'n0'" 
+                                        name="print-iterations"
+                                        [(ngModel)]="file.printIters"
+                                        [format]="'n0'"
                                         [spinners]="false"
                                         [min]="1">
                                     </kendo-numerictextbox>
@@ -198,8 +204,10 @@
                 <button kendoButton [primary]="true" (click)="onSubmit()">Submit</button>
             </div>
         </div>
-    </div>
-    <div class="python-console-container">
-        <textarea kendoTextArea></textarea>
+        <div class="python-console-container">
+            <ng-container *ngFor='let logMessage of pythonConsole'>
+                <div>{{logMessage}}</div>
+            </ng-container>
+        </div>
     </div>
 </div>

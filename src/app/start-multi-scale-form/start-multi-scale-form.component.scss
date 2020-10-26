@@ -1,67 +1,97 @@
 .start-multi-scale-form-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  margin: auto;
+  overflow: hidden;
+
+  .form-body {
     display: flex;
-    flex-direction: column;
+    flex-flow: column nowrap;
+    justify-content: center;
+    overflow: hidden;
     height: 100%;
-    width: 100%;
-    margin: auto;
+    overflow: auto;
 
-    .form-body {
+    .form-two-column {
+      display: flex;
+      flex-flow: row nowrap;
+
+      .form-column-half {
         display: flex;
-        flex-flow: column nowrap;
-        justify-content: center;
-
-        .form-two-column {
-            display: flex;
-            flex-flow: row nowrap;
-
-            .form-column-half {
-                display: flex;
-                flex-direction: column;
-                flex-grow: 1;
-            }
-        }
-
-        .form-container {
-            display: flex;
-            flex-direction: column;
-            padding: 4px 24px;
-
-            .form-input {
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-
-                > kendo-slider {
-                    flex-grow: 1;
-                }
-            }
-
-            kendo-fileselect {
-                width: 100%;
-            }
-        }
-    }
-
-    button {
-        width: 100px;
-    }
-
-    th {
-        text-align: left;
-    }
-    
-    .python-console-container {
+        flex-direction: column;
         flex-grow: 1;
-        height: 100%;
-
-        textarea {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-        }
+      }
     }
+
+    .form-container {
+      display: flex;
+      flex-direction: column;
+      padding: 4px 24px;
+
+      .form-input {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        > kendo-slider {
+          flex-grow: 1;
+        }
+      }
+
+      .style-table {
+        .style-weight-col {
+          width: 50%;
+        }
+      }
+
+      kendo-fileselect {
+        width: 100%;
+      }
+    }
+  }
+
+  button {
+    width: 100px;
+  }
+
+  th {
+    text-align: left;
+  }
+
+  .python-console-container {
+    flex-grow: 1;
+    height: 100%;
+    font-family: "Courier New", Courier, monospace;
+    border: 1px solid grey;
+    margin: 4px 24px;
+    overflow: auto;
+
+    textarea {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+  }
 }
 
 kendo-numerictextbox {
-    width: 75px;
+  width: 75px;
+}
+
+.template-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 255px;
+  border-right: 1px solid grey;
+
+  > * {
+    margin: 16px;
+  }
+
+  .template-panel-load-input {
+    display: none;
+  }
 }

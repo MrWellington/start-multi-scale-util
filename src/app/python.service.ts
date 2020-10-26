@@ -8,7 +8,7 @@ import { StartMultiScaleModel } from './start-multi-scale-form/start-multi-scale
   providedIn: 'root'
 })
 export class PythonService {
-  pythonOutput = new BehaviorSubject<string[]>([]);
+  pythonOutput = new BehaviorSubject<string>("");
 
   constructor() {
     electron.ipcRenderer.on('pythonOutput', (event, output) => {

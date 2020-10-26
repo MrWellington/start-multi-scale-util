@@ -1,5 +1,6 @@
 export class StartMultiScaleStyle extends File {
-    path: string;
+    fileName: string;
+    filePath: string;
     weight: number;
     learningRate: number;
     endLearningRate: number;
