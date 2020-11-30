@@ -1,136 +1,106 @@
 <div class="template-panel">
-  <button kendoButton class="template-panel-load-button" (click)="browseTemplates($event)">Load Template</button>
-  <input id="templateInput" class="template-panel-load-input" type="file" (change)="loadTemplate($event.target.files)">
-  <button kendoButton (click)="saveTemplate()">Save Template</button>
-  <div>Recents</div>
+    <button kendoButton class="template-panel-load-button" (click)="browseTemplates($event)">Load Template</button>
+    <input id="templateInput" class="template-panel-load-input" type="file"
+        (change)="loadTemplate($event.target.files)">
+    <button kendoButton (click)="saveTemplate()">Save Template</button>
+    <div>Recents</div>
 </div>
 <div class="start-multi-scale-form-container">
-    <div class="form-body">
-        <div class="form-two-column">
-            <div class="form-column-half">
-                <div class="form-container">
-                    <kendo-label text="Epochs"></kendo-label>
-                    <div class="form-input">
-                        <kendo-numerictextbox *ngFor="let epoch of formModel.epochs; let index = index; trackBy:trackByIndex"
-                            name="epoch{{index}}"
-                            [(ngModel)]="formModel.epochs[index]"
-                            [format]="'n0'"
-                            [spinners]="false"
-                            [min]="0"
-                            [max]="2000">
-                        </kendo-numerictextbox>
+    <form (ngSubmit)="onSubmit()" [formGroup]="startMultiScaleFormGroup">
+        <div class="form-body">
+            <div class="form-two-column">
+                <div class="form-column-half">
+                    <div class="form-container" formArrayName="epochs">
+                        <kendo-label text="Epochs"></kendo-label>
+                        <div class="numeric-group">
+                            <div class="form-input" *ngFor="let epoch of epochs.controls; let i = index">
+                                <input kendoTextBox type="number" step="1" [formControlName]="i" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-container" formArrayName="contentWeight">
+                        <kendo-label text="Content weight"></kendo-label>
+                        <div class="numeric-group">
+                            <div class="form-input" *ngFor="let weight of contentWeight.controls; let i = index">
+                                <input kendoTextBox type="number" step="1" [formControlName]="i" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-container" formArrayName="useReducedLayerSet">
+                        <kendo-label text="Use reduced layout set"></kendo-label>
+                        <div class="numeric-group">
+                            <div class="form-input"
+                                *ngFor="let useReducedLayerSet of useReducedLayerSet.controls; let i = index">
+                                <input kendoTextBox type="number" step="1" [formControlName]="i" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-container">
+                        <kendo-label text="Image ratio"></kendo-label>
+                        <div class="form-input">
+                            <input kendoTextBox class="img-ratio" type="number" step="0.1" formControlName="imgRatio" />
+                        </div>
+                        <div class="form-container">
+                            <kendo-label text="Key"></kendo-label>
+                            <div class="numeric-group">
+                                <div class="form-input">
+                                    <input kendoTextBox class="key" formControlName="key" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="form-container">
-                    <kendo-label text="Content weight"></kendo-label>
-                    <div class="form-input">
-                        <kendo-numerictextbox *ngFor="let weight of formModel.contentWeight; let index = index; trackBy:trackByIndex"
-                            name="weight{{index}}"
-                            [(ngModel)]="formModel.contentWeight[index]"
-                            [format]="'n0'"
-                            [spinners]="false"
-                            [min]="0"
-                            [max]="10000">
-                        </kendo-numerictextbox>
+                <div class="form-column-half">
+                    <div class="form-container">
+                        <kendo-label text="Run until"></kendo-label>
+                        <div class="form-input">
+                            <kendo-slider #runUntilSlider formControlName="runUntil" [min]="0"
+                                [max]="max_dim.length - 1">
+                            </kendo-slider>
+                            <span>{{max_dim[runUntilSlider.value]}}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="form-container">
-                    <kendo-label text="Use reduced layout set"></kendo-label>
-                    <div class="form-input">
-                        <kendo-numerictextbox *ngFor="let layerSet of formModel.useReducedLayerSet; let index = index; trackBy:trackByIndex"
-                            name="layer-set{{index}}"
-                            [(ngModel)]="formModel.useReducedLayerSet[index]"
-                            [format]="'n0'"
-                            [spinners]="false"
-                            [min]="0"
-                            [max]="7">
-                        </kendo-numerictextbox>
+                    <div class="form-container">
+                        <!--LEQ run_until-->
+                        <kendo-label text="Start from dim"></kendo-label>
+                        <div class="form-input">
+                            <kendo-slider #startFromSlider formControlName="startFromDim" [min]="0"
+                                [max]="max_dim.length - 1"></kendo-slider>
+                            <span>{{max_dim[startFromSlider.value]}}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="form-container">
-                    <kendo-label text="Image ratio"></kendo-label>
-                    <div class="form-input">
-                        <kendo-numerictextbox
-                            name="image-ratio"
-                            [(ngModel)]="formModel.imgRatio"
-                            [format]="'n1'"
-                            [spinners]="false"
-                            [min]="0"
-                            [max]="1">
-                        </kendo-numerictextbox>
+                    <div class="form-container">
+                        <!--LEQ run_until; change to small step of 1-->
+                        <kendo-label text="Previous dim"></kendo-label>
+                        <div class="form-input">
+                            <kendo-slider #previousSlider formControlName="previousDim" name="run-until" [min]="0"
+                                [max]="max_dim.length - 1"></kendo-slider>
+                            <span>{{max_dim[previousSlider.value]}}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="form-container">
-                    <kendo-label text="Key"></kendo-label>
-                    <div class="form-input">
-                        <input kendoTextBox
-                            name="key"
-                            [(ngModel)]="formModel.key" />
+                    <div class="form-container">
+                        <!--Just allow one file-->
+                        <kendo-label text="Content"></kendo-label>
+                        <div class="form-input">
+                            <kendo-fileselect [multiple]="false" (valueChange)="onContentChange($event)">
+                            </kendo-fileselect>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="form-column-half">
-                <div class="form-container">
-                    <kendo-label text="Run until"></kendo-label>
-                    <div class="form-input">
-                        <kendo-slider #runUntilSlider
-                            name="run-until"
-                            [min]="0"
-                            [max]="max_dim.length - 1">
-                        </kendo-slider>
-                        <span>{{max_dim[runUntilSlider.value]}}</span>
-                    </div>
-                </div>
-                <div class="form-container">
-                    <!--LEQ run_until-->
-                    <kendo-label text="Start from dim"></kendo-label>
-                    <div class="form-input">
-                        <kendo-slider #startFromSlider
-                            name="run-until"
-                            [min]="0"
-                            [max]="max_dim.length - 1">
-                        </kendo-slider>
-                        <span>{{max_dim[startFromSlider.value]}}</span>
-                    </div>
-                </div>
-                <div class="form-container">
-                    <!--LEQ run_until; change to small step of 1-->
-                    <kendo-label text="Previous dim"></kendo-label>
-                    <div class="form-input">
-                        <kendo-slider #previousSlider
-                            name="run-until"
-                            [min]="0"
-                            [max]="max_dim.length - 1">
-                        </kendo-slider>
-                        <span>{{max_dim[previousSlider.value]}}</span>
-                    </div>
-                </div>
-                <div class="form-container">
-                    <!--Just allow one file-->
-                    <kendo-label text="Content"></kendo-label>
-                    <div class="form-input">
-                        <kendo-fileselect [multiple]="false" (valueChange)="onContentChange($event)"></kendo-fileselect>
-                    </div>
-                </div>
-                <div class="form-container">
-                    <kendo-label text="GPU"></kendo-label>
-                    <div class="form-input">
-                        <kendo-switch
-                            name="gpu"
-                            [(ngModel)]="formModel.gpu">
-                        </kendo-switch>
+                    <div class="form-container">
+                        <kendo-label text="GPU"></kendo-label>
+                        <div class="form-input">
+                            <kendo-switch formControlName="gpu"></kendo-switch>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="form-single-column">
+                    <div class="form-single-column">
             <div class="form-container">
-                <!--One or more...populate grid with 'style' numeric (default 100, 0-10000, 'n1')-->
                 <kendo-label text="Styles"></kendo-label>
                 <div class="form-input">
-                    <kendo-fileselect class="styles" [(ngModel)]="formModel.styles" (valueChange)="onStyleChange($event)" name="styles"></kendo-fileselect>
+                    <kendo-fileselect class="styles" (valueChange)="onStyleChange($event)"></kendo-fileselect>
                 </div>
-                <table class="style-table" *ngIf="formModel.styles.length > 0">
+                <table class="style-table" *ngIf="styles.controls.length > 0">
                     <thead>
                         <tr>
                             <th class="style-name-col">Name</th>
@@ -143,53 +113,28 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <ng-container *ngFor='let file of formModel.styles'>
-                            <tr class="style-row">
+                        <ng-container formArrayName="styles" *ngFor='let file of styles.controls; let i = index'>
+                            <tr class="style-row" [formGroupName]="i">
                                 <td>
-                                    <kendo-label>{{file.fileName}}</kendo-label>
+                                    <kendo-label>{{file.value.fileName}}</kendo-label>
                                 </td>
                                 <td>
-                                    <input kendoTextBox [(ngModel)]="file.weight">
+                                    <input kendoTextBox formControlName="weight" />
                                 </td>
                                 <td>
-                                    <kendo-numerictextbox
-                                        name="learning-rate"
-                                        [(ngModel)]="file.learningRate"
-                                        [format]="'n6'"
-                                        [spinners]="false"
-                                        [min]="0">
-                                    </kendo-numerictextbox>
+                                    <input kendoTextBox formControlName="learningRate" step="0.000001" />
                                 </td>
                                 <td>
-                                    <kendo-numerictextbox
-                                        name="end-learning-rate"
-                                        [(ngModel)]="file.endLearningRate"
-                                        [format]="'n6'"
-                                        [spinners]="false"
-                                        [min]="0">
-                                    </kendo-numerictextbox>
+                                    <input kendoTextBox formControlName="endLearningRate" step="0.000001" />
                                 </td>
                                 <td>
-                                    <kendo-switch
-                                        name="auto-content-palette"
-                                        [(ngModel)]="file.autoContentPalette">
-                                    </kendo-switch>
+                                    <kendo-switch formControlName="autoContentPalette"></kendo-switch>
                                 </td>
                                 <td>
-                                    <kendo-numerictextbox
-                                        name="print-iterations"
-                                        [(ngModel)]="file.printIters"
-                                        [format]="'n0'"
-                                        [spinners]="false"
-                                        [min]="1">
-                                    </kendo-numerictextbox>
+                                    <input kendoTextBox type="number" step="1" formControlName="printIters" />
                                 </td>
                                 <td>
-                                    <kendo-slider #makeMirrorSlider
-                                        name="make-mirror"
-                                        [(ngModel)]="file.makeMirror"
-                                        [min]="0"
-                                        [max]="4">
+                                    <kendo-slider #makeMirrorSlider formControlName="makeMirror" [min]="0" [max]="4">
                                     </kendo-slider>
                                     <span>{{makeMirrorSlider.value}}</span>
                                 </td>
@@ -201,13 +146,14 @@
         </div>
         <div class="form-single-column">
             <div class="form-container">
-                <button kendoButton [primary]="true" (click)="onSubmit()">Submit</button>
+                <button kendoButton [primary]="true">Submit</button>
             </div>
         </div>
-        <div class="python-console-container">
-            <ng-container *ngFor='let logMessage of pythonConsole'>
-                <div>{{logMessage}}</div>
-            </ng-container>
         </div>
-    </div>
+    </form>
+</div>
+<div class="python-console-container">
+    <ng-container *ngFor='let logMessage of pythonConsole'>
+        <div>{{logMessage}}</div>
+    </ng-container>
 </div>

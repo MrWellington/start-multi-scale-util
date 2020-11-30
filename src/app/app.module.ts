@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms'
+import { ReactiveFormsModule } from '@angular/forms'
 
 import { AppComponent } from './app.component';
 import { StartMultiScaleFormComponent } from './start-multi-scale-form/start-multi-scale-form.component';
@@ -11,12 +11,6 @@ import { LabelModule } from '@progress/kendo-angular-label';
 import { UploadsModule } from '@progress/kendo-angular-upload';
 import { HttpClientModule } from '@angular/common/http';
 
-
-
-
-
-
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,7 +18,7 @@ import { HttpClientModule } from '@angular/common/http';
   ],
   imports: [
     BrowserModule,
-    FormsModule,
+    ReactiveFormsModule,
     ButtonsModule,
     BrowserAnimationsModule,
     InputsModule,
