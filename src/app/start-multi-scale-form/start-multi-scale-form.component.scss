@@ -1,3 +1,6 @@
+$invalidColor: rgb(194, 0, 0);
+$kendoGrey: #f6f6f6;
+
 .start-multi-scale-form-container {
   display: flex;
   flex-direction: column;
@@ -13,6 +16,48 @@
     overflow: hidden;
     height: 100%;
     overflow: auto;
+    padding-top: 4px;
+
+    .remove-file-button {
+      display: flex;
+      
+      > span {
+        align-self: center;
+        margin: 2px;
+        padding: 2px;
+
+        &:hover {
+          background-color: lightgrey;
+          border-radius: 100%;
+        }
+      }
+    }
+
+    .slider-label {
+      width: 40px;
+      text-align: center;
+    }
+
+    .validation-tooltip {
+      position: relative;
+      background-color: $invalidColor;
+      border-radius: 100%;
+      margin-left: 4px;
+      padding: 0 4px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .label-invalid {
+      color: $invalidColor;
+    }
+
+    kendo-label {
+      margin-bottom: 4px;
+      font-weight: bold;
+    }
 
     .form-two-column {
       display: flex;
@@ -29,6 +74,7 @@
       display: flex;
       flex-direction: column;
       padding: 4px 24px;
+      margin-bottom: 4px;
 
       .numeric-group {
         display: flex;
@@ -39,6 +85,10 @@
         }
       }
 
+      .form-input-header {
+        margin: 2px 0;
+      }
+
       .form-input {
         display: flex;
         flex-direction: row;
@@ -47,16 +97,95 @@
         > kendo-slider {
           flex-grow: 1;
         }
+
+        .content-wrapper {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+
+          .content-entry {
+            display: flex;
+
+            .content-input {
+              flex-grow: 1;
+            }
+          }
+        }
       }
 
       .style-table {
-        .style-weight-col {
-          width: 50%;
+        table-layout: fixed;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+        overflow: auto;
+        border: 1px solid lightgrey;
+        border-spacing: 0px;
+
+        thead {
+          th {
+            padding: 4px;
+            background-color: lightgrey;
+            border-right: 1px solid lightgrey;
+          }
+
+          .style-name-col {
+            width: 100%;
+          }
+        }
+
+        tbody {
+          tr {
+            &:nth-child(odd) {
+              background-color:white;
+            }
+
+            &:nth-child(even) {
+              background-color: rgb(238, 238, 238);
+            }
+
+            td {
+              padding: 2px 4px;
+              border-right: 1px solid lightgrey;
+            }
+          }
+
+          .make-mirror-wrapper {
+            display: flex;
+            align-items: center;
+          }
+
+          .style-name-cell {
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+
+        .k-textbox {
+          width: 72px;
         }
       }
 
       kendo-fileselect {
         width: 100%;
+      }
+    }
+
+    .button-toolbar {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      .template-panel-load-input {
+        display: none;
+      }
+
+      > .button-toolbar-left {
+        > button {
+          margin-right: 8px;
+        }
       }
     }
   }
@@ -82,25 +211,5 @@
       height: 100%;
       margin: 0;
     }
-  }
-}
-
-kendo-numerictextbox {
-  width: 75px;
-}
-
-.template-panel {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 255px;
-  border-right: 1px solid grey;
-
-  > * {
-    margin: 16px;
-  }
-
-  .template-panel-load-input {
-    display: none;
   }
 }

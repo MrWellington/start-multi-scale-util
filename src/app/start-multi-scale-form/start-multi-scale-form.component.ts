@@ -11,9 +11,9 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class StartMultiScaleFormComponent implements OnInit {
 
-    constructor(private pythonService: PythonService, 
-                private cdr: ChangeDetectorRef,
-                private fb: FormBuilder) {}
+    constructor(private pythonService: PythonService,
+        private cdr: ChangeDetectorRef,
+        private fb: FormBuilder) { }
 
     max_dim: number[] = [512, 1024, 2048, 4096, 7096];
 
@@ -56,7 +56,7 @@ export class StartMultiScaleFormComponent implements OnInit {
         let epochValidators = [Validators.min(0), Validators.max(2000), Validators.required];
         let contentWeightValidators = [Validators.min(0), Validators.max(10000), Validators.required];
         let useReducedLayerSetValidators = [Validators.min(0), Validators.max(7), Validators.required];
-        
+
         this.startMultiScaleFormGroup = this.fb.group({
             epochs: this.fb.array([
                 [600, epochValidators],
@@ -79,14 +79,19 @@ export class StartMultiScaleFormComponent implements OnInit {
                 [0, useReducedLayerSetValidators],
                 [0, useReducedLayerSetValidators],
             ]),
-            runUntil: [0],
-            startFromDim: [0],
-            previousDim: [0],
+            sliderGroup: this.fb.group({
+                runUntil: [0],
+                startFromDim: [0],
+                previousDim: [0]
+            }, { validators: this.sliderGroupValidator }),
             imgRatio: [0.8, [Validators.min(0), Validators.max(1), Validators.required]],
+            content: ["", Validators.required],
             gpu: [false],
             key: ["", Validators.required],
-            styles: this.fb.array([])
+            styles: this.fb.array([], Validators.required)
         });
+
+        // TODO: Load existing values if we have them stored
 
         this.pythonService.pythonOutput.subscribe((message) => {
             if (message) {
@@ -94,7 +99,31 @@ export class StartMultiScaleFormComponent implements OnInit {
                 this.cdr.detectChanges();
             }
         });
-    }
+    };
+
+    sliderGroupValidator = (sliders: FormGroup): { [key: string]: boolean } | null => {
+        let validationErrors: { [key: string]: boolean } = {};
+
+        const runUntilControl = sliders.get('runUntil');
+        const startFromDimControl = sliders.get('startFromDim');
+        const previousDimControl = sliders.get('previousDim');
+
+        if (this.max_dim[startFromDimControl.value] > this.max_dim[runUntilControl.value]) {
+            validationErrors['startFromInvalid'] = true;
+        }
+
+        if (previousDimControl.value > this.max_dim[runUntilControl.value]) {
+            validationErrors['previousInvalid'] = true;
+        }
+
+        if (Object.keys(validationErrors).length === 0) {
+            // Returning null means no validation errors, everything is good
+            return null;
+        }
+        else {
+            return validationErrors;
+        }
+    };
 
     private buildStyle(fileName: string, filePath: string): FormGroup {
         return this.fb.group({
@@ -110,14 +139,22 @@ export class StartMultiScaleFormComponent implements OnInit {
     }
 
     onSubmit(): void {
+        // TODO: Sanitize and submit form
         debugger;
     }
 
     onContentChange(e: Array<any>) {
         if (e && e[0]) {
             let newContent = e[0];
-            this.startMultiScaleFormModel.content = newContent.path;
+            this.startMultiScaleFormGroup.get('content').setValue(newContent.path);
         }
+        else {
+            this.startMultiScaleFormGroup.get('content').setValue("");
+        }
+    }
+
+    removeContent() {
+        this.startMultiScaleFormGroup.get('content').setValue("");
     }
 
     onStyleChange(e: Array<any>) {
@@ -130,12 +167,18 @@ export class StartMultiScaleFormComponent implements OnInit {
         })
     }
 
-    saveTemplate() {
-      let a = document.createElement("a");
-      let file = new Blob([JSON.stringify(this.startMultiScaleFormModel) as BlobPart], {type: "application/json"});
-      a.href = URL.createObjectURL(file);
-      a.download = Date.now().toString();
-      a.click();
+    removeStyle(index: number) {
+        this.styles.removeAt(index);
+    }
+
+    saveTemplate(event: any) {
+        event.preventDefault();
+
+        let a = document.createElement("a");
+        let file = new Blob([JSON.stringify(this.startMultiScaleFormModel) as BlobPart], { type: "application/json" });
+        a.href = URL.createObjectURL(file);
+        a.download = Date.now().toString();
+        a.click();
     }
 
     browseTemplates(event: any) {
