@@ -12,7 +12,6 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class StartMultiScaleFormComponent implements OnInit {
 
     constructor(private pythonService: PythonService,
-        private cdr: ChangeDetectorRef,
         private fb: FormBuilder) { }
 
     max_dim: number[] = [512, 1024, 2048, 4096, 7096];
@@ -92,13 +91,6 @@ export class StartMultiScaleFormComponent implements OnInit {
         });
 
         // TODO: Load existing values if we have them stored
-
-        this.pythonService.pythonOutput.subscribe((message) => {
-            if (message) {
-                this.pythonConsole.unshift(message);
-                this.cdr.detectChanges();
-            }
-        });
     };
 
     sliderGroupValidator = (sliders: FormGroup): { [key: string]: boolean } | null => {
@@ -133,7 +125,7 @@ export class StartMultiScaleFormComponent implements OnInit {
             learningRate: [0.000015, [Validators.min(0), Validators.required]],
             endLearningRate: [0.000005, [Validators.min(0), Validators.required]],
             autoContentPalette: true,
-            printIters: [500, [Validators.min(0), Validators.required]],
+            printIters: [500, [Validators.min(0), Validators.max(100000), Validators.required]],
             makeMirror: 0
         });
     }
@@ -201,7 +193,6 @@ export class StartMultiScaleFormComponent implements OnInit {
     private setForm(model: StartMultiScaleModel) {
         if (model) {
             this.startMultiScaleFormModel = model;
-            this.cdr.detectChanges();
         }
     }
 }

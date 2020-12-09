@@ -10,11 +10,13 @@ import { InputsModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
 import { UploadsModule } from '@progress/kendo-angular-upload';
 import { HttpClientModule } from '@angular/common/http';
+import { PythonConsoleComponent } from './python-console/python-console.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    StartMultiScaleFormComponent
+    StartMultiScaleFormComponent,
+    PythonConsoleComponent
   ],
   imports: [
     BrowserModule,
