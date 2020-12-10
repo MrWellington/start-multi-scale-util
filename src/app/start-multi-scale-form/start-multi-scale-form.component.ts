@@ -1,8 +1,7 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { StartMultiScaleModel } from './start-multi-scale-model'
+import { Component, OnInit } from '@angular/core';
 import { PythonService } from '../python.service';
-import { StartMultiScaleStyle } from './start-multi-scale-style';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { SelectEvent } from '@progress/kendo-angular-upload';
 
 @Component({
     selector: 'start-multi-scale-form',
@@ -16,21 +15,6 @@ export class StartMultiScaleFormComponent implements OnInit {
 
     max_dim: number[] = [512, 1024, 2048, 4096, 7096];
 
-    defaultModel: StartMultiScaleModel = {
-        epochs: [600, 250, 250, 150, 150],
-        contentWeight: [10, 10, 0, 0, 0],
-        useReducedLayerSet: [3, 3, 0, 0, 0],
-        runUntil: 2048,
-        startFromDim: 0,
-        previousDim: 0,
-        imgRatio: 0.8,
-        gpu: false,
-        content: "",
-        key: "",
-        styles: []
-    };
-
-    startMultiScaleFormModel: StartMultiScaleModel = { ...this.defaultModel };
     startMultiScaleFormGroup: FormGroup;
     pythonConsole: string[] = [];
 
@@ -131,32 +115,41 @@ export class StartMultiScaleFormComponent implements OnInit {
     }
 
     onSubmit(): void {
-        // TODO: Sanitize and submit form
-        debugger;
+        this.pythonService.submitForm(this.startMultiScaleFormGroup.value);
     }
 
-    onContentChange(e: Array<any>) {
-        if (e && e[0]) {
-            let newContent = e[0];
-            this.startMultiScaleFormGroup.get('content').setValue(newContent.path);
+    onContentSelect(e: SelectEvent) {
+        // Should only ever be one file here - configured Kendo FileSelect to enforce this with [multiple]="false"
+        if (e.files && e.files[0]) {
+            // For some reason Kendo's TypeScript definiton doesn't include File.path...cast to 'any' as workaround
+            let rawFileObj: any = e.files[0].rawFile;
+            this.startMultiScaleFormGroup.get('content').setValue(rawFileObj.path);
         }
         else {
             this.startMultiScaleFormGroup.get('content').setValue("");
         }
+
+        // This will prevent the file from being added to the Kendo widget itself, so we can instead manage it via the form's model
+        e.preventDefault();
     }
 
     removeContent() {
         this.startMultiScaleFormGroup.get('content').setValue("");
     }
 
-    onStyleChange(e: Array<any>) {
-        e.forEach((file) => {
-            if (this.styles.controls.find(style => style.value.filePath === file.path)) {
-                return;
-            }
+    onStyleSelect(e: SelectEvent) {
+        e.files.forEach((file) => {
+            // For some reason Kendo's TypeScript definiton doesn't include File.path...cast to 'any' as workaround
+            let rawFileObj: any = file.rawFile;
+            this.styles.push(this.buildStyle(rawFileObj.name, rawFileObj.path));
+        });
 
-            this.styles.push(this.buildStyle(file.name, file.path));
-        })
+        // This will prevent the file(s) from being added to the Kendo widget itself, so we can instead manage it via the form's model
+        e.preventDefault();
+    }
+
+    styleRowsValid(columnName: string) {
+        return this.styles.controls.every(style => (<any>style).controls[columnName].valid === true);
     }
 
     removeStyle(index: number) {
@@ -167,7 +160,7 @@ export class StartMultiScaleFormComponent implements OnInit {
         event.preventDefault();
 
         let a = document.createElement("a");
-        let file = new Blob([JSON.stringify(this.startMultiScaleFormModel) as BlobPart], { type: "application/json" });
+        let file = new Blob([JSON.stringify(this.startMultiScaleFormGroup.value) as BlobPart], { type: "application/json" });
         a.href = URL.createObjectURL(file);
         a.download = Date.now().toString();
         a.click();
@@ -185,14 +178,15 @@ export class StartMultiScaleFormComponent implements OnInit {
         reader.onload = (event) => {
             let jsonString = event.target.result as string;
             let newModel = JSON.parse(jsonString);
-            this.setForm(newModel as StartMultiScaleModel);
+            this.setForm(newModel);
         };
         reader.readAsText(files[0]);
     }
 
-    private setForm(model: StartMultiScaleModel) {
+    private setForm(model: any) {
         if (model) {
-            this.startMultiScaleFormModel = model;
+            // this.startMultiScaleFormModel = model;
+            this.startMultiScaleFormGroup.setValue(model);
         }
     }
 }

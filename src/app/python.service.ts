@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 const electron = (<any>window).require('electron');
-import { StartMultiScaleModel } from './start-multi-scale-form/start-multi-scale-model'
-
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +14,7 @@ export class PythonService {
     });
   }
 
-  submitForm(model: StartMultiScaleModel) {
+  submitForm(model: any) {
     electron.ipcRenderer.send('callPython', JSON.stringify(model));
   }
 }

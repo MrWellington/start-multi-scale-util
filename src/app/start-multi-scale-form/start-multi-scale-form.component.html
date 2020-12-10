@@ -99,7 +99,7 @@
                         </div>
                         <div class="form-input">
                             <div class="content-wrapper">
-                                <kendo-fileselect [multiple]="false" (valueChange)="onContentChange($event)"></kendo-fileselect>
+                                <kendo-fileselect [multiple]="false" (select)="onContentSelect($event)"></kendo-fileselect>
                                 <div class="content-entry" *ngIf="startMultiScaleFormGroup.get('content').value">
                                     <input kendoTextBox class="content-input" formControlName="content">
                                     <div class="remove-file-button">
@@ -121,21 +121,53 @@
                 <div class="form-container">
                     <div class="form-input-header">
                         <kendo-label text="Styles" [ngClass]="{'label-invalid': !styles.valid}"></kendo-label>
-                        <span title="At least one style must be added" class="validation-tooltip" *ngIf="!styles.valid">?</span>
+                        <span title="At least one valid style must be added" class="validation-tooltip" *ngIf="!styles.valid">?</span>
                     </div>
                     <div class="form-input">
-                        <kendo-fileselect class="styles" (valueChange)="onStyleChange($event)"></kendo-fileselect>
+                        <kendo-fileselect class="styles" (select)="onStyleSelect($event)"></kendo-fileselect>
                     </div>
                     <table class="style-table" *ngIf="styles.controls.length > 0">
                         <thead>
                             <tr class="style-header-row">
-                                <th class="style-name-col" title="Name">Name</th>
-                                <th class="style-weight-col" title="Weight">Weight</th>
-                                <th class="style-lr-col" title="Learning Rate">Learning Rate</th>
-                                <th class="style-elr-col" title="End Learning Rate">End Learning Rate</th>
-                                <th class="style-acp-col" title="Auto Content Palette">Auto Content Palette</th>
-                                <th class="style-pi-col" title="Print Iters">Print Iters</th>
-                                <th class="style-mm-col" title="Make Mirror">Make Mirror</th>
+                                <th class="style-name-col" title="Name">
+                                    <div class="form-input-header">
+                                        <kendo-label text="Name"></kendo-label>
+                                    </div>
+                                </th>
+                                <th class="style-weight-col" title="Weight">
+                                    <div class="form-input-header">
+                                        <kendo-label text="Weight" [ngClass]="{'label-invalid': !styleRowsValid('weight')}"></kendo-label>
+                                        <span title="Weight values are required and must be within the range of 0 and 10000" class="validation-tooltip" *ngIf="!styleRowsValid('weight')">?</span>
+                                    </div>
+                                </th>
+                                <th class="style-lr-col" title="Learning Rate">
+                                    <div class="form-input-header">
+                                        <kendo-label text="Learning Rate" [ngClass]="{'label-invalid': !styleRowsValid('learningRate')}"></kendo-label>
+                                        <span title="Learning rate values are required and must be at least 0" class="validation-tooltip" *ngIf="!styleRowsValid('learningRate')">?</span>
+                                    </div>
+                                </th>
+                                <th class="style-elr-col" title="End Learning Rate">
+                                    <div class="form-input-header">
+                                        <kendo-label text="End Learning Rate" [ngClass]="{'label-invalid': !styleRowsValid('endLearningRate')}"></kendo-label>
+                                        <span title="End learning rate values are required and must be at least 0" class="validation-tooltip" *ngIf="!styleRowsValid('endLearningRate')">?</span>
+                                    </div>
+                                </th>
+                                <th class="style-acp-col" title="Auto Content Palette">
+                                    <div class="form-input-header">
+                                        <kendo-label text="Auto Content Palette"></kendo-label>
+                                    </div>
+                                </th>
+                                <th class="style-pi-col" title="Print Iters">
+                                    <div class="form-input-header">
+                                        <kendo-label text="Print Iters" [ngClass]="{'label-invalid': !styleRowsValid('printIters')}"></kendo-label>
+                                        <span title="Print Iter values are required and must be within the range of 0 and 100000" class="validation-tooltip" *ngIf="!styleRowsValid('printIters')">?</span>
+                                    </div>
+                                </th>
+                                <th class="style-mm-col" title="Make Mirror">
+                                    <div class="form-input-header">
+                                        <kendo-label text="Make Mirror"></kendo-label>
+                                    </div>
+                                </th>
                                 <th class="style-remove-col"></th>
                             </tr>
                         </thead>
