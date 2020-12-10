@@ -10,16 +10,18 @@ header {
 
 .app-body {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    justify-content: space-between;
     align-items: stretch;
     height: 100%;
     overflow: hidden;
+    padding-bottom: 12px;
 
     start-multi-scale-form {
         height: 100%;
         width: 100%;
-        overflow: hidden;
         display: flex;
+        overflow: hidden;
     }
 }
 
