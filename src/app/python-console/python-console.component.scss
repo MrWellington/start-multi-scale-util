@@ -1,10 +1,12 @@
 .python-console-container {
   height: 100%;
   min-height: 250px;
+  max-height: 250px;
   font-family: "Courier New", Courier, monospace;
   border: 1px solid grey;
   margin: 4px 24px;
   overflow: auto;
+  padding: 4px 8px;
 
   textarea {
     width: 100%;
