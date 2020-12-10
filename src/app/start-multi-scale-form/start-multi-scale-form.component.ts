@@ -12,7 +12,7 @@ export class StartMultiScaleFormComponent implements OnInit {
 
     constructor(private pythonService: PythonService,
         private fb: FormBuilder) { }
-
+    
     max_dim: number[] = [512, 1024, 2048, 4096, 7096];
 
     startMultiScaleFormGroup: FormGroup;
@@ -115,7 +115,20 @@ export class StartMultiScaleFormComponent implements OnInit {
     }
 
     onSubmit(): void {
+        // runUntil and startFromDim are stored as index pointers -- need to translate them before and after submission
+        // would be great to find a better way to handle this
+        let sliderFormGroup = this.startMultiScaleFormGroup.get('sliderGroup');
+        let runUntilControlIndex = sliderFormGroup.get('runUntil').value;
+        let startFromDimControlIndex = sliderFormGroup.get('startFromDim').value;
+        this.startMultiScaleFormGroup.value.sliderGroup.runUntil = this.max_dim[runUntilControlIndex];
+        this.startMultiScaleFormGroup.value.sliderGroup.startFromDim = this.max_dim[startFromDimControlIndex];
+        
+        // Submit to Angular service that encapsulates Python interop
         this.pythonService.submitForm(this.startMultiScaleFormGroup.value);
+
+        // Set index pointer values back after submission
+        this.startMultiScaleFormGroup.value.sliderGroup.runUntil = runUntilControlIndex;
+        this.startMultiScaleFormGroup.value.sliderGroup.startFromDim = startFromDimControlIndex;
     }
 
     onContentSelect(e: SelectEvent) {
