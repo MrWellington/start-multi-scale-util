@@ -3,7 +3,9 @@ import * as path from "path";
 import * as url from "url";
 import { PythonShell } from "python-shell";
 import { Options } from 'electron/main';
+const Store = require('electron-store');
 
+// Entry point to the Electron app
 let appWindow: BrowserWindow;
 
 function initWindow() {
@@ -60,7 +62,7 @@ ipcMain.on("callPython", (event, form) => {
   let pyshell = PythonShell.run('test.py', options);
 
   pyshell.on('message', function (message) {
-    // receive print messages in real time from python
+    // receive stdout in real time from python + bash
     appWindow.webContents.send("pythonOutput", message);
   });
    
@@ -71,4 +73,14 @@ ipcMain.on("callPython", (event, form) => {
     }
     appWindow.webContents.send("pythonOutput", "Python script finished successfully.");
   });
+});
+
+ipcMain.handle("getConfig", (event, key) => {
+  let configStore = new Store();
+  return configStore.get(key);
+});
+
+ipcMain.handle("setConfig", (event, ...args) => {
+  let configStore = new Store();
+  configStore.set(args[0], args[1]);
 });

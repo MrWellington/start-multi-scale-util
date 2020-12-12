@@ -30,6 +30,12 @@ $kendoGrey: #f6f6f6;
           background-color: lightgrey;
           border-radius: 100%;
         }
+
+        &:active {
+          background-color: rgb(58, 58, 58);
+          border-radius: 100%;
+          color: white;
+        }
       }
     }
 
@@ -105,9 +111,11 @@ $kendoGrey: #f6f6f6;
 
           .content-entry {
             display: flex;
+            border: 1px solid rgba(0, 0, 0, 0.08);
 
             .content-input {
               flex-grow: 1;
+              border: none;
             }
           }
         }

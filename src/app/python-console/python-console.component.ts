@@ -11,12 +11,18 @@ export class PythonConsoleComponent implements OnInit {
     constructor(private pythonService: PythonService, private cdr: ChangeDetectorRef) { }
 
     pythonConsole: string[] = [];
+    containerElem: Element;
 
     ngOnInit(): void {
         this.pythonService.pythonOutput.subscribe((message) => {
+            if (!this.containerElem) {
+                this.containerElem = document.getElementById('python-console-container');
+            }
+
             if (message) {
-                this.pythonConsole.unshift(message);
+                this.pythonConsole.push(message);
                 this.cdr.detectChanges();
+                this.containerElem.scrollTop = this.containerElem.scrollHeight;
             }
         });
     }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PythonService } from '../python.service';
-import { FormArray, FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { ConfigService } from '../config.service'
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SelectEvent } from '@progress/kendo-angular-upload';
 
 @Component({
@@ -11,13 +12,17 @@ import { SelectEvent } from '@progress/kendo-angular-upload';
 export class StartMultiScaleFormComponent implements OnInit {
 
     constructor(private pythonService: PythonService,
+        private configService: ConfigService,
         private fb: FormBuilder) { }
     
+    // Sliders are not good with enumerated value sets like this - use this array and indicies to manage pointers to the correct values
+    // Pre-submission the indicies will be translated to values in this array
     max_dim: number[] = [512, 1024, 2048, 4096, 7096];
-
+    
+    // Our parent reactive form object that maps our model to HTML - model can be accessed with this.startMultiScaleFormGroup.value
     startMultiScaleFormGroup: FormGroup;
-    pythonConsole: string[] = [];
-
+    
+    // Getters to provide convenient access to collection objects on the model
     get epochs(): FormArray {
         return this.startMultiScaleFormGroup.get('epochs') as FormArray;
     }
@@ -36,6 +41,7 @@ export class StartMultiScaleFormComponent implements OnInit {
 
     // Called when component is initialized (currently at load time)
     ngOnInit(): void {
+        // Use Angular FormBuilder to create the reactive form with default values and validation rules
         let epochValidators = [Validators.min(0), Validators.max(2000), Validators.required];
         let contentWeightValidators = [Validators.min(0), Validators.max(10000), Validators.required];
         let useReducedLayerSetValidators = [Validators.min(0), Validators.max(7), Validators.required];
@@ -74,9 +80,20 @@ export class StartMultiScaleFormComponent implements OnInit {
             styles: this.fb.array([], Validators.required)
         });
 
-        // TODO: Load existing values if we have them stored
+        // Load an existing form from previous session if there is one
+        this.configService.get('previousForm').then(previousForm => {
+            if (previousForm) {
+                this.setForm(JSON.parse(previousForm));
+            }
+        });
+
+        // Add event listener to save the current form before the process exits
+        window.addEventListener('beforeunload', (event) => {
+            this.configService.set('previousForm', JSON.stringify(this.startMultiScaleFormGroup.value));
+        });
     };
 
+    // Custom 'group' validator to manage cross-validation rules in slider controls
     sliderGroupValidator = (sliders: FormGroup): { [key: string]: boolean } | null => {
         let validationErrors: { [key: string]: boolean } = {};
 
@@ -101,7 +118,8 @@ export class StartMultiScaleFormComponent implements OnInit {
         }
     };
 
-    private buildStyle(fileName: string, filePath: string): FormGroup {
+    // Called when a file is added to the 'styles' collection, dynamically adds a row to the 'styles' FormArray with default values and validation rules
+    buildStyle(fileName: string, filePath: string): FormGroup {
         return this.fb.group({
             fileName: [fileName, [Validators.required]],
             filePath: [filePath, [Validators.required]],
@@ -114,9 +132,9 @@ export class StartMultiScaleFormComponent implements OnInit {
         });
     }
 
+    // Custom form submission to re-route HTML form to our python service
     onSubmit(): void {
         // runUntil and startFromDim are stored as index pointers -- need to translate them before and after submission
-        // would be great to find a better way to handle this
         let sliderFormGroup = this.startMultiScaleFormGroup.get('sliderGroup');
         let runUntilControlIndex = sliderFormGroup.get('runUntil').value;
         let startFromDimControlIndex = sliderFormGroup.get('startFromDim').value;
@@ -131,8 +149,9 @@ export class StartMultiScaleFormComponent implements OnInit {
         this.startMultiScaleFormGroup.value.sliderGroup.startFromDim = startFromDimControlIndex;
     }
 
+    // Called when file is added to content control
     onContentSelect(e: SelectEvent) {
-        // Should only ever be one file here - configured Kendo FileSelect to enforce this with [multiple]="false"
+        // Should only ever be one file here - configured Kendo FileSelect to enforce this with [multiple]="false" in HTML
         if (e.files && e.files[0]) {
             // For some reason Kendo's TypeScript definiton doesn't include File.path...cast to 'any' as workaround
             let rawFileObj: any = e.files[0].rawFile;
@@ -146,10 +165,12 @@ export class StartMultiScaleFormComponent implements OnInit {
         e.preventDefault();
     }
 
+    // Event handler for the 'x' button by the content path
     removeContent() {
         this.startMultiScaleFormGroup.get('content').setValue("");
     }
 
+    // Called when one or more 'styles' are added
     onStyleSelect(e: SelectEvent) {
         e.files.forEach((file) => {
             // For some reason Kendo's TypeScript definiton doesn't include File.path...cast to 'any' as workaround
@@ -161,17 +182,22 @@ export class StartMultiScaleFormComponent implements OnInit {
         e.preventDefault();
     }
 
-    styleRowsValid(columnName: string) {
+    // Convenience method to check the validity of all columns in the 'styles' grid
+    styleColumnValid(columnName: string) {
         return this.styles.controls.every(style => (<any>style).controls[columnName].valid === true);
     }
 
+    // Event handler for 'x' button in styles grid
     removeStyle(index: number) {
         this.styles.removeAt(index);
     }
 
+    // Event handler for save button
     saveTemplate(event: any) {
+        // Button is in the form - prevent default behavior of form submission
         event.preventDefault();
 
+        // Create a temporary hidden anchor tag with file href and click it to invoke host OS save behavior
         let a = document.createElement("a");
         let file = new Blob([JSON.stringify(this.startMultiScaleFormGroup.value) as BlobPart], { type: "application/json" });
         a.href = URL.createObjectURL(file);
@@ -179,14 +205,19 @@ export class StartMultiScaleFormComponent implements OnInit {
         a.click();
     }
 
+    // Event handler for load template button
     browseTemplates(event: any) {
+        // Button is in the form - prevent default behavior of form submission
         event.preventDefault();
 
+        // templateInput is hidden and replaced with Kendo button for look and feel purposes, perform programmatic click to invoke host OS load behavior
         let inputElem: HTMLElement = document.getElementById('templateInput');
         inputElem.click();
     }
 
+    // Called once a template file is selected from host OS browse window
     loadTemplate(files: FileList) {
+        // Use FileReader API to convert the file contents to a string
         let reader = new FileReader();
         reader.onload = (event) => {
             let jsonString = event.target.result as string;
@@ -196,9 +227,22 @@ export class StartMultiScaleFormComponent implements OnInit {
         reader.readAsText(files[0]);
     }
 
+    // Takes the structured model as an object and loads it into the form - called during load and by load template button
     private setForm(model: any) {
         if (model) {
-            // this.startMultiScaleFormModel = model;
+            // Wipe any existing controls added dynamically to styles array
+            this.styles.clear();
+
+            // If the model has more styles, need to create their controls/validators and add them dymamically
+            if (model.styles && model.styles.length > 0) {
+                model.styles.forEach(() => {
+                    // Just need to create the appropriate number of controls with dummy data 
+                    // setValue will take care of the actual model binding
+                    this.styles.push(this.buildStyle('',''));
+                })
+            }
+
+            // Bind the model to form
             this.startMultiScaleFormGroup.setValue(model);
         }
     }

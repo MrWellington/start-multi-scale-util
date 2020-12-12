@@ -136,20 +136,20 @@
                                 </th>
                                 <th class="style-weight-col" title="Weight">
                                     <div class="form-input-header">
-                                        <kendo-label text="Weight" [ngClass]="{'label-invalid': !styleRowsValid('weight')}"></kendo-label>
-                                        <span title="Weight values are required and must be within the range of 0 and 10000" class="validation-tooltip" *ngIf="!styleRowsValid('weight')">?</span>
+                                        <kendo-label text="Weight" [ngClass]="{'label-invalid': !styleColumnValid('weight')}"></kendo-label>
+                                        <span title="Weight values are required and must be within the range of 0 and 10000" class="validation-tooltip" *ngIf="!styleColumnValid('weight')">?</span>
                                     </div>
                                 </th>
                                 <th class="style-lr-col" title="Learning Rate">
                                     <div class="form-input-header">
-                                        <kendo-label text="Learning Rate" [ngClass]="{'label-invalid': !styleRowsValid('learningRate')}"></kendo-label>
-                                        <span title="Learning rate values are required and must be at least 0" class="validation-tooltip" *ngIf="!styleRowsValid('learningRate')">?</span>
+                                        <kendo-label text="Learning Rate" [ngClass]="{'label-invalid': !styleColumnValid('learningRate')}"></kendo-label>
+                                        <span title="Learning rate values are required and must be at least 0" class="validation-tooltip" *ngIf="!styleColumnValid('learningRate')">?</span>
                                     </div>
                                 </th>
                                 <th class="style-elr-col" title="End Learning Rate">
                                     <div class="form-input-header">
-                                        <kendo-label text="End Learning Rate" [ngClass]="{'label-invalid': !styleRowsValid('endLearningRate')}"></kendo-label>
-                                        <span title="End learning rate values are required and must be at least 0" class="validation-tooltip" *ngIf="!styleRowsValid('endLearningRate')">?</span>
+                                        <kendo-label text="End Learning Rate" [ngClass]="{'label-invalid': !styleColumnValid('endLearningRate')}"></kendo-label>
+                                        <span title="End learning rate values are required and must be at least 0" class="validation-tooltip" *ngIf="!styleColumnValid('endLearningRate')">?</span>
                                     </div>
                                 </th>
                                 <th class="style-acp-col" title="Auto Content Palette">
@@ -159,8 +159,8 @@
                                 </th>
                                 <th class="style-pi-col" title="Print Iters">
                                     <div class="form-input-header">
-                                        <kendo-label text="Print Iters" [ngClass]="{'label-invalid': !styleRowsValid('printIters')}"></kendo-label>
-                                        <span title="Print Iter values are required and must be within the range of 0 and 100000" class="validation-tooltip" *ngIf="!styleRowsValid('printIters')">?</span>
+                                        <kendo-label text="Print Iters" [ngClass]="{'label-invalid': !styleColumnValid('printIters')}"></kendo-label>
+                                        <span title="Print Iter values are required and must be within the range of 0 and 100000" class="validation-tooltip" *ngIf="!styleColumnValid('printIters')">?</span>
                                     </div>
                                 </th>
                                 <th class="style-mm-col" title="Make Mirror">
@@ -178,13 +178,13 @@
                                         <span title="{{file.value.fileName}}">{{file.value.fileName}}</span>
                                     </td>
                                     <td>
-                                        <input kendoTextBox formControlName="weight" />
+                                        <input kendoTextBox type="number" formControlName="weight" step="1" />
                                     </td>
                                     <td>
-                                        <input kendoTextBox formControlName="learningRate" step="0.000001" />
+                                        <input kendoTextBox type="number" formControlName="learningRate" step="0.000001" />
                                     </td>
                                     <td>
-                                        <input kendoTextBox formControlName="endLearningRate" step="0.000001" />
+                                        <input kendoTextBox type="number" formControlName="endLearningRate" step="0.000001" />
                                     </td>
                                     <td>
                                         <kendo-switch formControlName="autoContentPalette"></kendo-switch>

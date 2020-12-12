@@ -32,6 +32,7 @@
     "@progress/kendo-angular-upload": "^6.0.2",
     "@progress/kendo-drawing": "^1.5.12",
     "@progress/kendo-theme-default": "latest",
+    "electron-store": "^6.0.1",
     "python-shell": "^2.0.1",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",
