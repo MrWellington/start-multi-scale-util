@@ -1,15 +1,13 @@
 {
-  "name": "start-multi-scale-util",
-  "version": "0.0.0",
-  "main": "app.js",
+  "name": "jai-rev-ai-utility",
+  "version": "1.0.0",
+  "description": "This utility is a graphical front-end intended to help create, manage, and submit input templates to the JaiRevAI utility developed by Emergent Artwork. This application is built using Electron and can be run on any of its supported platforms.",
+  "main": "electron/dist/main.js",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e",
-    "electron": "ng build --base-href ./ && tsc --p electron && cpy electron/python/*.py electron/dist/python && electron electron/dist/main.js"
+    "start": "electron-forge start",
+    "electron": "ng build --base-href ./ && tsc --p electron && cpy electron/python/*.py electron/dist/python && electron electron/dist/main.js",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "private": true,
   "dependencies": {
@@ -32,6 +30,7 @@
     "@progress/kendo-angular-upload": "^6.0.2",
     "@progress/kendo-drawing": "^1.5.12",
     "@progress/kendo-theme-default": "latest",
+    "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^6.0.1",
     "python-shell": "^2.0.1",
     "rxjs": "~6.5.5",
@@ -42,6 +41,11 @@
     "@angular-devkit/build-angular": "~0.1000.8",
     "@angular/cli": "~10.0.8",
     "@angular/compiler-cli": "~10.0.14",
+    "@electron-forge/cli": "^6.0.0-beta.54",
+    "@electron-forge/maker-deb": "^6.0.0-beta.54",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.54",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
+    "@electron-forge/maker-zip": "^6.0.0-beta.54",
     "@types/jasmine": "~3.5.0",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.12.55",
@@ -60,5 +64,32 @@
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
     "typescript": "~3.9.5"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "icon": "src/assets/jairevai_iconpng"
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "start_multi_scale_util"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {
+            "icon": "src/assets/jairevai_iconpng.png"
+          }
+        }
+      ]
+    }
   }
 }

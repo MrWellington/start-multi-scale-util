@@ -12,6 +12,7 @@ function initWindow() {
   appWindow = new BrowserWindow({
     width: 1280,
     height: 1024,
+    icon: "src/assets/jairevai_iconpng.png",
     webPreferences: {
       nodeIntegration: true
     }
@@ -26,8 +27,8 @@ function initWindow() {
     })
   );
 
-  // Initialize the DevTools.
-  appWindow.webContents.openDevTools()
+  // Initialize the DevTools. (for development)
+  // appWindow.webContents.openDevTools()
 
   appWindow.on('closed', function () {
     appWindow = null
